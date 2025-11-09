@@ -33,6 +33,10 @@ const config: runtime.GetPrismaClientConfig = {
         "fromEnvVar": null,
         "value": "windows",
         "native": true
+      },
+      {
+        "fromEnvVar": null,
+        "value": "rhel-openssl-3.0.x"
       }
     ],
     "previewFeatures": [],
@@ -46,6 +50,7 @@ const config: runtime.GetPrismaClientConfig = {
     "db"
   ],
   "activeProvider": "postgresql",
+  "postinstall": false,
   "inlineDatasources": {
     "db": {
       "url": {
@@ -54,8 +59,8 @@ const config: runtime.GetPrismaClientConfig = {
       }
     }
   },
-  "inlineSchema": "// This is your Prisma schema file,\n// learn more about it in the docs: https://pris.ly/d/prisma-schema\n\n// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?\n// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init\n\ngenerator client {\n  provider = \"prisma-client\"\n  output   = \"../app/generated/prisma\"\n  // output   = \"../src/generated\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n  url      = env(\"DATABASE_URL\")\n}\n\nmodel User {\n  id               String    @id @default(cuid())\n  userName         String\n  email            String\n  clerkId          String    @unique\n  sentMessages     Message[] @relation(\"sender\")\n  recievedMessages Message[] @relation(\"reciever\")\n  createdAt        DateTime  @default(now())\n  updatedAt        DateTime  @updatedAt\n}\n\nmodel Message {\n  id         String   @id @default(cuid())\n  message    String\n  senderId   String\n  recieverId String\n  sender     User     @relation(\"sender\", fields: [senderId], references: [id])\n  reciever   User     @relation(\"reciever\", fields: [recieverId], references: [id])\n  createdAt  DateTime @default(now())\n  updatedAt  DateTime @updatedAt\n}\n",
-  "inlineSchemaHash": "006c6f87670b5f6ff2253dd215b29edd2dca03ecc8a3ec9a7c45fe4e840c2498",
+  "inlineSchema": "// This is your Prisma schema file,\n// learn more about it in the docs: https://pris.ly/d/prisma-schema\n\n// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?\n// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init\n\ngenerator client {\n  provider      = \"prisma-client\"\n  output        = \"../app/generated/prisma\"\n  binaryTargets = [\"native\", \"rhel-openssl-3.0.x\"]\n\n  // output   = \"../src/generated\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n  url      = env(\"DATABASE_URL\")\n}\n\nmodel User {\n  id               String    @id @default(cuid())\n  userName         String\n  email            String\n  clerkId          String    @unique\n  sentMessages     Message[] @relation(\"sender\")\n  recievedMessages Message[] @relation(\"reciever\")\n  createdAt        DateTime  @default(now())\n  updatedAt        DateTime  @updatedAt\n}\n\nmodel Message {\n  id         String   @id @default(cuid())\n  message    String\n  senderId   String\n  recieverId String\n  sender     User     @relation(\"sender\", fields: [senderId], references: [id])\n  reciever   User     @relation(\"reciever\", fields: [recieverId], references: [id])\n  createdAt  DateTime @default(now())\n  updatedAt  DateTime @updatedAt\n}\n",
+  "inlineSchemaHash": "0f14a372558e9c2a345c6bc033d6316e1f51df1000fb6147ecc0ef8dfae252e3",
   "copyEngine": true,
   "runtimeDataModel": {
     "models": {},
