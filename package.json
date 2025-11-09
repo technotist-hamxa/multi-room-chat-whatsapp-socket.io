@@ -7,7 +7,7 @@
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
-    "postinstall": "nuxt prepare && npx prisma generate"
+    "postinstall": "npx prisma generate && nuxt prepare"
   },
   "dependencies": {
     "@clerk/nuxt": "^1.11.2",
