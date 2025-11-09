@@ -58,3 +58,4 @@ export default defineNitroPlugin((nitroApp: NitroApp) => {
     })
   );
 });
+// hello
