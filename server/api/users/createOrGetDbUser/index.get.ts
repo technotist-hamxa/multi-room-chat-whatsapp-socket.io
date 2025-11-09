@@ -15,7 +15,8 @@ export default defineEventHandler(async(event) => {
   // Get the user's full `Backend User` object
   const user = await clerkClient(event).users.getUser(userId);
 
-  let dbUser = await db.user.findUnique({
+  try {
+    let dbUser = await db.user.findUnique({
     where: {
       clerkId: user.id
     }
@@ -32,4 +33,9 @@ export default defineEventHandler(async(event) => {
   }
 
   return dbUser;
+  } catch (error: any) {
+    console.log(error.message, 'iam the error');
+
+    return error.message;
+  }
 });
