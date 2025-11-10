@@ -7,7 +7,7 @@
 generator client {
   provider = "prisma-client"
   output   = "../app/generated/prisma"
-    binaryTargets = ["native", "linux-musl"]  // first one is for cross-platform, second one for docker, last one for serverless environment. safe to include all
+    binaryTargets = ["linux-musl"]  // first one is for cross-platform, second one for docker, last one for serverless environment. safe to include all
 
   // output   = "../src/generated"
 }
