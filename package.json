@@ -3,6 +3,7 @@
   "type": "module",
   "private": true,
   "scripts": {
+    "prebuild": "rm -rf app/generated/prisma",
     "build": "npx prisma generate && nuxt build",
     "dev": "nuxt dev",
     "generate": "nuxt generate",
