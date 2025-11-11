@@ -3,24 +3,30 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "prebuild": "rm -rf app/generated/prisma",
-    "build": "npx prisma generate && nuxt build",
+    "build": "nuxt build",
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
-    "postinstall": "npx prisma generate && nuxt prepare"
+    "postinstall": "nuxt prepare"
   },
   "dependencies": {
     "@clerk/nuxt": "^1.11.2",
     "@nuxt/ui": "4.1.0",
     "@prisma/client": "^6.18.0",
+    "dotenv": "^17.2.3",
+    "drizzle-orm": "^0.44.7",
     "nuxt": "^4.2.0",
+    "pg": "^8.16.3",
     "prisma": "^6.18.0",
     "socket.io": "^4.8.1",
     "socket.io-client": "^4.8.1",
     "typescript": "^5.6.3",
     "vue": "^3.5.22",
     "vue-router": "^4.6.3"
+  },
+  "devDependencies": {
+    "@types/pg": "^8.15.6",
+    "drizzle-kit": "^0.31.6",
+    "tsx": "^4.20.6"
   }
 }
-

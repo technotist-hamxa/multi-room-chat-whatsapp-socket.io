@@ -1,4 +1,6 @@
-import db from "~~/libs/db";
+import { eq, not } from "drizzle-orm";
+import { usersTable } from "~~/db/schema";
+import {db} from "~~/libs/db";
 
 export default defineEventHandler(async(event) => {
     const { isAuthenticated, userId } = event.context.auth()
@@ -10,13 +12,7 @@ export default defineEventHandler(async(event) => {
       statusMessage: 'Unauthorized: No user ID provided',
     })
   }
-    const users = await db.user.findMany({
-        where: {
-            clerkId: {
-                not: userId
-            }
-        }
-    });
+    const users = await db.select().from(usersTable).where(not(eq(usersTable.clerkId, userId)))
 
     return users;
 });

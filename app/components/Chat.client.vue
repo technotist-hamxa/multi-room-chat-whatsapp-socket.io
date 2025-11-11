@@ -11,6 +11,8 @@ const { data: messages, refresh } = await useFetch(
   `/api/messages?senderId=${route.query.senderId}&recieverId=${route.params.recieverId}`
 );
 
+console.log(messages, 'msg');
+
 // Create unique room key
 const room = [route.query.senderId, route.params.recieverId].sort().join("-");
 
@@ -21,6 +23,7 @@ socket.once("connect", () => {
 
 // Listen for new messages
 socket.on("new-message", async (msg) => {
+  console.log(msg, 'msg');
   await refresh(); // reload from DB
   await nextTick(); // wait for DOM to update
   scrollToBottom(); // scroll down after refresh
@@ -51,7 +54,7 @@ const handleOnSubmit = () => {
   socket.emit("send-message", {
     message: message.value,
     senderId: route.query.senderId,
-    recieverId: route.params.recieverId,
+    receiverId: route.params.recieverId,
     room,
   });
   message.value = "";

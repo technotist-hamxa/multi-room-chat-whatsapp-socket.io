@@ -2,7 +2,8 @@ import type { NitroApp } from "nitropack";
 import { Server as Engine } from "engine.io";
 import { Server } from "socket.io";
 import { defineEventHandler } from "h3";
-import db from "~~/libs/db";
+import { db } from "~~/libs/db";
+import { messageTable } from "~~/db/schema";
 
 export default defineNitroPlugin((nitroApp: NitroApp) => {
   const engine = new Engine();
@@ -21,18 +22,21 @@ export default defineNitroPlugin((nitroApp: NitroApp) => {
     });
 
     // Handle messages
-    socket.on("send-message", async ({ message, senderId, recieverId, room }) => {
-        const m = await db.message.create({
-          data: {
-            senderId,
-            recieverId,
-            message,
-          },
-        });
+    socket.on(
+      "send-message",
+      async ({ message, senderId, receiverId, room }) => {
+        console.log('send');
+        const m = await db.insert(messageTable).values({
+          senderId,
+          receiverId,
+          message,
+        }).returning();
+        console.log(m, 'm');
 
         // ✅ Correct: emit event name and payload separately
-        io.to(room).emit("new-message", m);
-    });
+        io.to(room).emit("new-message", m[0]);
+      }
+    );
   });
 
   // ✅ This must be outside the connection handler

@@ -1,4 +1,5 @@
-import db from "~~/libs/db";
+import { usersTable } from "~~/db/schema";
+import {db} from "~~/libs/db";
 
 export default defineEventHandler(async(event) => {
     const { isAuthenticated, userId } = event.context.auth()
@@ -10,7 +11,7 @@ export default defineEventHandler(async(event) => {
       statusMessage: 'Unauthorized: No user ID provided',
     })
   }
-    const users = await db.user.findMany();
+    const users = await db.select().from(usersTable);
 
     return users;
 });

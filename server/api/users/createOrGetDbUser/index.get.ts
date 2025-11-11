@@ -1,5 +1,7 @@
 import { clerkClient } from "@clerk/nuxt/server";
-import db from '~~/libs/db';
+import {db} from '~~/libs/db';
+import {usersTable} from '~~/db/schema';
+import { eq } from "drizzle-orm";
 
 export default defineEventHandler(async(event) => {
     const { isAuthenticated, userId } = event.context.auth()
@@ -13,29 +15,24 @@ export default defineEventHandler(async(event) => {
   }
 
   // Get the user's full `Backend User` object
-  const user = await clerkClient(event).users.getUser(userId);
-
   try {
-    let dbUser = await db.user.findUnique({
-    where: {
-      clerkId: user.id
-    }
-  });
+    const user = await clerkClient(event).users.getUser(userId);
 
-  if(!dbUser) {
-    dbUser = await db.user.create({
-      data: {
+    let dbUser = await db.select().from(usersTable).where(eq(usersTable.clerkId, user.id));
+
+  if(!dbUser[0]) {
+    dbUser = await db.insert(usersTable).values({
         userName: `${user.firstName} ${user.lastName}`,
         email: user.emailAddresses[0].emailAddress,
         clerkId: user.id
-      }
-    });
+      }).returning();
   }
 
-  return dbUser;
-  } catch (error: any) {
-    console.log(error.message, 'iam the error');
+  
 
+  return dbUser[0];
+  } catch (error: any) {
     return error.message;
   }
+  
 });

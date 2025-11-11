@@ -1,8 +1,13 @@
-import { PrismaClient } from "../app/generated/prisma/client";
-const globalForPrisma = global as unknown as { prisma: PrismaClient };
+// import { PrismaClient } from "../app/generated/prisma/client";
+// const globalForPrisma = global as unknown as { prisma: PrismaClient };
 
-const db = globalForPrisma.prisma || new PrismaClient();
+// const db = globalForPrisma.prisma || new PrismaClient();
 
-if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = db;
+// if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = db;
 
-export default db;
+// export default db;
+
+import 'dotenv/config';
+import { drizzle } from 'drizzle-orm/node-postgres';
+
+export const db = drizzle(process.env.DATABASE_URL!);
