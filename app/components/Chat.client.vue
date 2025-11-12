@@ -14,6 +14,7 @@ const chatList = ref(null); // 🧩 reference to UL element
 const { data: messages, refresh } = await useFetch(
   `/api/messages?senderId=${route.query.senderId}&recieverId=${route.params.recieverId}`
 );
+console.log(messages, 'messages');
 
 // console.log(messages, "msg");
 // hello

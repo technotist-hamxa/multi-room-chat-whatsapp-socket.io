@@ -5,7 +5,8 @@ import { db } from "~~/libs/db";
 export default defineEventHandler(async (event) => {
   const query = getQuery(event);
 
-  const senderId = query.senderId as string;
+  try {
+    const senderId = query.senderId as string;
   const recieverId = query.recieverId as string;
 
   // const messages = await db.message.findMany({
@@ -44,4 +45,7 @@ export default defineEventHandler(async (event) => {
   });
 
   return transformedMessages;
+  } catch (error: any) {
+    return error.message
+  }
 });
