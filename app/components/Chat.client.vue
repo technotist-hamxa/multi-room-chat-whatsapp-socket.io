@@ -1,5 +1,6 @@
 <script setup>
-import { socket } from "./socket";
+import { pusherClient } from "./pusherClient";
+// import { socket } from "./socket";
 import { nextTick, ref, watch } from "vue";
 
 const message = ref("");
@@ -7,23 +8,32 @@ const route = useRoute();
 const chatList = ref(null); // 🧩 reference to UL element
 
 // Fetch old messages between sender & receiver
+// pusherClient.bind('joined', (data: any) => {
+//   alert(data.msg);
+// })
 const { data: messages, refresh } = await useFetch(
   `/api/messages?senderId=${route.query.senderId}&recieverId=${route.params.recieverId}`
 );
 
-console.log(messages, 'msg');
+// console.log(messages, "msg");
 // hello
 // Create unique room key
 const room = [route.query.senderId, route.params.recieverId].sort().join("-");
 
+pusherClient.subscribe(room);
 // Connect once
-socket.once("connect", () => {
-  console.log("Connected to server ✅");
-});
+// socket.once("connect", () => {
+//   console.log("Connected to server ✅");
+// });
 
 // Listen for new messages
-socket.on("new-message", async (msg) => {
-  console.log(msg, 'msg');
+// socket.on("new-message", async (msg) => {
+//   console.log(msg, 'msg');
+//   await refresh(); // reload from DB
+//   await nextTick(); // wait for DOM to update
+//   scrollToBottom(); // scroll down after refresh
+// });
+pusherClient.bind("sendMessage", async (data) => {
   await refresh(); // reload from DB
   await nextTick(); // wait for DOM to update
   scrollToBottom(); // scroll down after refresh
@@ -31,7 +41,7 @@ socket.on("new-message", async (msg) => {
 
 // Join the room when component mounts
 onMounted(() => {
-  socket.emit("join-room", room);
+  // socket.emit("join-room", room);
   scrollToBottom(); // scroll to bottom on initial load
 });
 
@@ -49,14 +59,17 @@ watch(messages, async () => {
 });
 
 // Send message
-const handleOnSubmit = () => {
+const handleOnSubmit = async() => {
   if (!message.value.trim()) return;
-  socket.emit("send-message", {
-    message: message.value,
+  await $fetch('/api/messages', {
+    method: 'POST',
+    body: {
+      message: message.value,
     senderId: route.query.senderId,
     receiverId: route.params.recieverId,
     room,
-  });
+    }
+  })
   message.value = "";
 };
 </script>

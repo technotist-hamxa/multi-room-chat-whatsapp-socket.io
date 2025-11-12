@@ -2,6 +2,7 @@ import { clerkClient } from "@clerk/nuxt/server";
 import {db} from '~~/libs/db';
 import {usersTable} from '~~/db/schema';
 import { eq } from "drizzle-orm";
+import {pusherServer} from '~~/server/utils/pusherServer';
 
 export default defineEventHandler(async(event) => {
     const { isAuthenticated, userId } = event.context.auth()
@@ -29,7 +30,9 @@ export default defineEventHandler(async(event) => {
   }
 
   
-
+pusherServer.trigger('room', 'joined', {
+  msg: 'hello the user has been connected'
+});
   return dbUser[0];
   } catch (error: any) {
     return error.message;
