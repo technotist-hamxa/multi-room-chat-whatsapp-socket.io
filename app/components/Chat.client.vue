@@ -36,6 +36,7 @@ pusherClient.subscribe(room);
 //   scrollToBottom(); // scroll down after refresh
 // });
 pusherClient.bind("sendMessage", async (data) => {
+  console.log(data, 'message-sent');
   await refresh(); // reload from DB
   await nextTick(); // wait for DOM to update
   scrollToBottom(); // scroll down after refresh
