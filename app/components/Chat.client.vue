@@ -14,7 +14,8 @@ const chatList = ref(null); // 🧩 reference to UL element
 const { data: messages, refresh } = await useFetch(
   `/api/messages?senderId=${route.query.senderId}&recieverId=${route.params.recieverId}`
 );
-console.log(messages, 'messages');
+
+console.log(messages, "messages");
 
 // console.log(messages, "msg");
 // hello
@@ -42,6 +43,7 @@ pusherClient.bind("sendMessage", async (data) => {
 
 // Join the room when component mounts
 onMounted(() => {
+  console.log(route.query.senderId, route.params.recieverId, 'route');
   // socket.emit("join-room", room);
   scrollToBottom(); // scroll to bottom on initial load
 });
@@ -60,17 +62,17 @@ watch(messages, async () => {
 });
 
 // Send message
-const handleOnSubmit = async() => {
+const handleOnSubmit = async () => {
   if (!message.value.trim()) return;
-  await $fetch('/api/messages', {
-    method: 'POST',
+  await $fetch("/api/messages/createMessage", {
+    method: "POST",
     body: {
       message: message.value,
-    senderId: route.query.senderId,
-    receiverId: route.params.recieverId,
-    room,
-    }
-  })
+      senderId: route.query.senderId,
+      receiverId: route.params.recieverId,
+      room,
+    },
+  });
   message.value = "";
 };
 </script>
